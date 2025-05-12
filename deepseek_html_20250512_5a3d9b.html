@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Torres de Hanoi - Julián</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f0f0f0;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .game-panel {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .tower {
+            width: 120px;
+            height: 250px;
+            background: #666;
+            border-radius: 5px;
+            position: relative;
+            cursor: pointer;
+            margin: 0 10px;
+        }
+
+        .disk {
+            height: 30px;
+            background: #4CAF50;
+            position: absolute;
+            border-radius: 15px;
+            border: 2px solid #fff;
+            left: 50%;
+            transform: translateX(-50%);
+            transition: all 0.3s;
+        }
+
+        .controls {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        #moveCounter {
+            font-size: 24px;
+            margin: 20px 0;
+            color: #333;
+        }
+
+        .rules {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 30px;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background: #2196F3;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .modal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #4CAF50;
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Torres de Hanoi</h1>
+        <div class="controls">
+            <input type="text" id="playerName" placeholder="Nombre" value="Julián">
+            <input type="number" id="diskCount" value="3" min="1" max="8">
+            <button onclick="startGame()">Nuevo Juego</button>
+        </div>
+        <div id="moveCounter">Movimientos: 0</div>
+    </div>
+
+    <div class="game-panel">
+        <div class="tower" id="tower0" onclick="handleTowerClick(0)"></div>
+        <div class="tower" id="tower1" onclick="handleTowerClick(1)"></div>
+        <div class="tower" id="tower2" onclick="handleTowerClick(2)"></div>
+    </div>
+
+    <div class="rules">
+        <h2>Reglas del Juego</h2>
+        <ol>
+            <li>Solo puedes mover un disco a la vez</li>
+            <li>No coloques un disco grande sobre uno pequeño</li>
+            <li>Mueve todos los discos a otra torre para ganar</li>
+            <li>¡El mínimo de movimientos posibles es 2<sup>n</sup> - 1!</li>
+        </ol>
+    </div>
+
+    <div id="status" class="modal"></div>
+
+    <script>
+        let towers = [[], [], []];
+        let selectedTower = null;
+        let moveCount = 0;
+        const colors = ['#4CAF50', '#2196F3', '#FF9800', '#E91E63', '#9C27B0'];
+
+        function startGame() {
+            const diskCount = parseInt(document.getElementById('diskCount').value) || 3;
+            towers = [Array.from({length: diskCount}, (_, i) => diskCount - i), [], []];
+            moveCount = 0;
+            selectedTower = null;
+            updateDisplay();
+        }
+
+        function handleTowerClick(towerIndex) {
+            if (selectedTower === null) {
+                if (towers[towerIndex].length > 0) {
+                    selectedTower = towerIndex;
+                    document.getElementById(`tower${towerIndex}`).style.transform = 'translateY(-10px)';
+                }
+            } else {
+                if (moveDisk(selectedTower, towerIndex)) {
+                    moveCount++;
+                    checkWin();
+                }
+                document.getElementById(`tower${selectedTower}`).style.transform = 'none';
+                selectedTower = null;
+            }
+            updateDisplay();
+        }
+
+        function moveDisk(from, to) {
+            const disk = towers[from].pop();
+            if (disk === undefined) return false;
+            
+            if (towers[to].length > 0 && disk > towers[to][towers[to].length - 1]) {
+                towers[from].push(disk);
+                return false;
+            }
+            
+            towers[to].push(disk);
+            return true;
+        }
+
+        function updateDisplay() {
+            document.getElementById('moveCounter').textContent = `Movimientos: ${moveCount}`;
+            
+            towers.forEach((tower, index) => {
+                const towerElement = document.getElementById(`tower${index}`);
+                towerElement.innerHTML = '';
+                
+                tower.forEach((size, pos) => {
+                    const disk = document.createElement('div');
+                    disk.className = 'disk';
+                    disk.style.width = `${40 + size * 25}px`;
+                    disk.style.bottom = `${pos * 35}px`;
+                    disk.style.backgroundColor = colors[size % colors.length];
+                    towerElement.appendChild(disk);
+                });
+            });
+        }
+
+        function checkWin() {
+            const diskCount = parseInt(document.getElementById('diskCount').value);
+            if (towers[1].length === diskCount || towers[2].length === diskCount) {
+                const modal = document.getElementById('status');
+                modal.innerHTML = `¡Felicidades!<br>Movimientos: ${moveCount}`;
+                modal.style.display = 'block';
+                setTimeout(() => modal.style.display = 'none', 2000);
+                setTimeout(startGame, 2500);
+            }
+        }
+
+        window.onload = startGame;
+    </script>
+</body>
+</html>
