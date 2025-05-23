@@ -1,5 +1,77 @@
 <!DOCTYPE html>
 <html lang="es">
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+<script>
+  // Configura esto con tus propios datos (paso 4)
+  const firebaseConfig = {
+    apiKey: "// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIzaSyCW7r4PTQsL5tMQpYXzMPXGrYsw5ESykuM",
+  authDomain: "torres-de-hanoi-50e00.firebaseapp.com",
+  projectId: "torres-de-hanoi-50e00",
+  storageBucket: "torres-de-hanoi-50e00.firebasestorage.app",
+  messagingSenderId: "1079785471542",
+  appId: "1:1079785471542:web:ba51b271ce28bc2b52a297",
+  measurementId: "G-FREPWKJYZM"
+};",
+    authDomain: "// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIzaSyCW7r4PTQsL5tMQpYXzMPXGrYsw5ESykuM",
+  authDomain: "torres-de-hanoi-50e00.firebaseapp.com",
+  projectId: "torres-de-hanoi-50e00",
+  storageBucket: "torres-de-hanoi-50e00.firebasestorage.app",
+  messagingSenderId: "1079785471542",
+  appId: "1:1079785471542:web:ba51b271ce28bc2b52a297",
+  measurementId: "G-FREPWKJYZM"
+};.firebaseapp.com",
+    projectId: "// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIzaSyCW7r4PTQsL5tMQpYXzMPXGrYsw5ESykuM",
+  authDomain: "torres-de-hanoi-50e00.firebaseapp.com",
+  projectId: "torres-de-hanoi-50e00",
+  storageBucket: "torres-de-hanoi-50e00.firebasestorage.app",
+  messagingSenderId: "1079785471542",
+  appId: "1:1079785471542:web:ba51b271ce28bc2b52a297",
+  measurementId: "G-FREPWKJYZM"
+};",
+    storageBucket: "// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIzaSyCW7r4PTQsL5tMQpYXzMPXGrYsw5ESykuM",
+  authDomain: "torres-de-hanoi-50e00.firebaseapp.com",
+  projectId: "torres-de-hanoi-50e00",
+  storageBucket: "torres-de-hanoi-50e00.firebasestorage.app",
+  messagingSenderId: "1079785471542",
+  appId: "1:1079785471542:web:ba51b271ce28bc2b52a297",
+  measurementId: "G-FREPWKJYZM"
+};.appspot.com",
+    messagingSenderId: "// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIzaSyCW7r4PTQsL5tMQpYXzMPXGrYsw5ESykuM",
+  authDomain: "torres-de-hanoi-50e00.firebaseapp.com",
+  projectId: "torres-de-hanoi-50e00",
+  storageBucket: "torres-de-hanoi-50e00.firebasestorage.app",
+  messagingSenderId: "1079785471542",
+  appId: "1:1079785471542:web:ba51b271ce28bc2b52a297",
+  measurementId: "G-FREPWKJYZM"
+};",
+    appId: "// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIzaSyCW7r4PTQsL5tMQpYXzMPXGrYsw5ESykuM",
+  authDomain: "torres-de-hanoi-50e00.firebaseapp.com",
+  projectId: "torres-de-hanoi-50e00",
+  storageBucket: "torres-de-hanoi-50e00.firebasestorage.app",
+  messagingSenderId: "1079785471542",
+  appId: "1:1079785471542:web:ba51b271ce28bc2b52a297",
+  measurementId: "G-FREPWKJYZM"
+};"
+  };
+
+  // Inicializar Firebase
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.firestore();
+</script>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -117,35 +189,79 @@
     <div id="status" class="modal"></div>
 
     <script>
+        const firebaseConfig = {
+        apiKey: "AIzaSyCW7r4PTQsL5tMQpYXzMPXGrYsw5ESykuM",
+        authDomain: "torres-de-hanoi-50e00.firebaseapp.com",
+        projectId: "torres-de-hanoi-50e00",
+        storageBucket: "torres-de-hanoi-50e00.firebasestorage.app",
+        messagingSenderId: "1079785471542",
+        appId: "1:1079785471542:web:ba51b271ce28bc2b52a297"
+            };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
         let towers = [[], [], []];
-        let selectedTower = null;
-        let moveCount = 0;
-        const colors = ['#4CAF50', '#2196F3', '#FF9800', '#E91E63', '#9C27B0'];
+    let selectedTower = null;
+    let moveCount = 0;
+    const colors = ['#4CAF50', '#2196F3', '#FF9800', '#E91E63', '#9C27B0'];
+        let currentGameId = null;
+        let gameStartTime = null;
 
-        function startGame() {
-            const diskCount = parseInt(document.getElementById('diskCount').value) || 3;
-            towers = [Array.from({length: diskCount}, (_, i) => diskCount - i), [], []];
-            moveCount = 0;
-            selectedTower = null;
-            updateDisplay();
-        }
+       async function startGame() {
+        const playerName = document.getElementById('playerName').value;
+        const diskCount = parseInt(document.getElementById('diskCount').value) || 3;
+        
+        towers = [Array.from({length: diskCount}, (_, i) => diskCount - i), [], []];
+        moveCount = 0;
+        selectedTower = null;
+        gameStartTime = new Date();
+           const gameData = {
+            playerName: playerName,
+            diskCount: diskCount,
+            startTime: new Date(),
+            status: "jugando",
+            moves: []
+        };
+        const docRef = await db.collection("juegos").add(gameData);
+        currentGameId = docRef.id; // 🚀 Nuevo
+        
+        updateDisplay();
+    }
 
-        function handleTowerClick(towerIndex) {
-            if (selectedTower === null) {
-                if (towers[towerIndex].length > 0) {
-                    selectedTower = towerIndex;
-                    document.getElementById(`tower${towerIndex}`).style.transform = 'translateY(-10px)';
-                }
-            } else {
-                if (moveDisk(selectedTower, towerIndex)) {
-                    moveCount++;
-                    checkWin();
-                }
-                document.getElementById(`tower${selectedTower}`).style.transform = 'none';
-                selectedTower = null;
+        async function handleTowerClick(towerIndex) {
+        if (selectedTower === null) {
+            if (towers[towerIndex].length > 0) {
+                selectedTower = towerIndex;
+                document.getElementById(`tower${towerIndex}`).style.transform = 'translateY(-10px)';
             }
-            updateDisplay();
+        } else {
+            const from = selectedTower;
+            const to = towerIndex;
+            const diskSize = towers[from][towers[from].length - 1];
+            if (moveDisk(from, to)) {
+                moveCount++;
+                await logMove(from, to, diskSize);
+                checkWin();
+            }
+            
+            document.getElementById(`tower${selectedTower}`).style.transform = 'none';
+            selectedTower = null;
         }
+        updateDisplay();
+    }
+          async function logMove(from, to, diskSize) {
+        if (!currentGameId) return;
+
+        await db.collection("juegos").doc(currentGameId).update({
+            moves: firebase.firestore.FieldValue.arrayUnion({
+                moveNumber: moveCount,
+                from: from,
+                to: to,
+                diskSize: diskSize,
+                time: new Date()
+            }),
+            totalMoves: moveCount
+        });
+    }
 
         function moveDisk(from, to) {
             const disk = towers[from].pop();
@@ -178,16 +294,26 @@
             });
         }
 
-        function checkWin() {
-            const diskCount = parseInt(document.getElementById('diskCount').value);
-            if (towers[1].length === diskCount || towers[2].length === diskCount) {
-                const modal = document.getElementById('status');
-                modal.innerHTML = `¡Felicidades!<br>Movimientos: ${moveCount}`;
-                modal.style.display = 'block';
-                setTimeout(() => modal.style.display = 'none', 2000);
-                setTimeout(startGame, 2500);
-            }
+        async function checkWin() {
+        const diskCount = parseInt(document.getElementById('diskCount').value);
+        if (towers[1].length === diskCount || towers[2].length === diskCount) {
+            const endTime = new Date();
+            const timeElapsed = Math.round((endTime - gameStartTime) / 1000);
+            
+            const modal = document.getElementById('status');
+            modal.innerHTML = `¡Ganaste!<br>Movimientos: ${moveCount}<br>Tiempo: ${timeElapsed}s`;
+            modal.style.display = 'block';
+            await db.collection("juegos").doc(currentGameId).update({
+                status: "ganado",
+                endTime: new Date(),
+                totalTime: timeElapsed,
+                optimalMoves: Math.pow(2, diskCount) - 1
+            });
+            
+            setTimeout(() => modal.style.display = 'none', 3000);
+            setTimeout(startGame, 3500);
         }
+    }
 
         window.onload = startGame;
     </script>
